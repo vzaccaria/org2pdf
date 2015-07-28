@@ -1,7 +1,7 @@
 {
   "name": "org2pdf",
   "version": "0.0.1",
-  "description": "No name given yet",
+  "description": "simple, org-mode to beamer pdf conversion (through pandoc)",
   "main": "index.js",
   "bin": {
     "org2pdf": "./index.js"
