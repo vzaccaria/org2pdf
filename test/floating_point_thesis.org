@@ -1,0 +1,74 @@
+#+TITLE:     Synthesis of fixed point code
+#+AUTHOR:    Vittorio Zaccaria
+#+EMAIL:     vittorio.zaccaria@polimi.it
+#+DATE:      <2015-07-26 Sun>
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME:
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+#+LATEX_CLASS: beamer
+#+startup: beamer
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [bigger]
+#+BEAMER_THEME: Dresden 
+#+BEAMER_FRAME_LEVEL: 1
+
+* Why we need fixed point
+
+-  Express fractional numbers, using a fixed number of bits [[http://www.digitalsignallabs.com/fp.pdf]]
+
+-  Useful for systems without floating-point hardware (DSPs, FPGAs, and expensive custom ASIC, microcontrollers).
+
+-  Also useful when you need speed, as integer operations are faster than floating point ones.
+
+* Integer representation
+
+-  The formula for calculating the integer representation $x$ in a $Q_{m.n}$ format of a float number $f$ is (ah):
+
+   $x = round(f * 2^n)$
+
+-  To convert it back the following formula is used:
+
+   $f = x * 2^{-n}$
+
+* Range and resolution
+
+-  For a given $Q_{m.n}$ we have:
+
+   -  its range is $[ - (2^m) , 2^m -2^{-n}]$
+
+   -  its resolution is $2^{-n}$
+
+* The problem
+
+-  operations can produce results that have more bits than the operands (*e.g.* multiplications)
+
+> Example: $Q_{1.7} * Q_{1.7} \rightarrow Q_{2.14}$
+
+-  Solution: temporarily use a bigger register but then truncate or round back to $Q_{1.7}$
+
+* Ada approach
+
+-  Ada uses a delta type; with this you can specify what is the minimum difference between two float numbers to be
+   considered different.
+
+
+-  The compiler however will choose $2^{-12} = \frac{1}{4096}$, not $\frac{1}{3600}$.
+
+* Concepts
+
+Two's complement
+
+-  Assume $x$ is $N$ bits. We define the complement $x_2$ such that:
+
+$x_2 + x = 2^N$
+
+-  $2^N$ is represented by zeroes over $N$ bits and a 1 outside the $N$ bits. So, if we focus on the lower $N$ bit,
+   we'll see that $x_2$ behaves like a real *inverse* of $x$ in '+'.
