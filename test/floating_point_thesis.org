@@ -1,4 +1,4 @@
-#+TITLE:     Synthesis of fixed point code
+#+TITLE:     synthesis of fixed point code
 #+AUTHOR:    Vittorio Zaccaria
 #+EMAIL:     vittorio.zaccaria@polimi.it
 #+DATE:      <2015-07-26 Sun>
@@ -20,7 +20,7 @@
 #+BEAMER_THEME: Dresden 
 #+BEAMER_FRAME_LEVEL: 1
 
-* Why we need fixed point
+* why we need fixed point
 
 -  Express fractional numbers, using a fixed number of bits [[http://www.digitalsignallabs.com/fp.pdf]]
 
@@ -32,25 +32,25 @@
 
 -  The formula for calculating the integer representation $x$ in a $Q_{m.n}$ format of a float number $f$ is (ah):
 
-   $x = round(f * 2^n)$
+   $$x = round(f * 2^n)$$
 
 -  To convert it back the following formula is used:
 
-   $f = x * 2^{-n}$
+   $$f = x * 2^{-n}$$
 
 * Range and resolution
 
 -  For a given $Q_{m.n}$ we have:
 
-   -  its range is $[ - (2^m) , 2^m -2^{-n}]$
+   -  its range is $$[ - (2^m) , 2^m -2^{-n}]$$
 
-   -  its resolution is $2^{-n}$
+   -  its resolution is $$2^{-n}$$
 
 * The problem
 
 -  operations can produce results that have more bits than the operands (*e.g.* multiplications)
 
-> Example: $Q_{1.7} * Q_{1.7} \rightarrow Q_{2.14}$
+$$Q_{1.7} * Q_{1.7} \rightarrow Q_{2.14}$$
 
 -  Solution: temporarily use a bigger register but then truncate or round back to $Q_{1.7}$
 

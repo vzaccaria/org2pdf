@@ -1,4 +1,4 @@
-\documentclass[$if(fontsize)$$fontsize$,$endif$$if(handout)$handout,$endif$$if(beamer)$ignorenonframetext,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(handout)$handout,$endif$$if(beamer)$ignorenonframetext,$endif$$for(classoption)$$classoption$$sep$,$endfor$,aspectratio=169]{$documentclass$}
 $if(theme)$
 \usetheme{$theme$}
 $endif$
@@ -51,11 +51,12 @@ $endif$
 \ifxetex
   \usepackage{fontspec,xltxtra,xunicode}
   \newcommand{\euro}{€}
-  \setmainfont{Helvetica Neue Thin}
-  \setsansfont{Helvetica Neue}
+  \setmainfont{Fira Sans}
+  \setsansfont{Fira Sans}
   \setmonofont[Scale=0.8,Ligatures=TeX]{Hasklig Medium}
-  \setbeamerfont{title}{family=\fontspec{Helvetica Neue Condensed Bold}}
-  \setbeamerfont{frametitle}{family=\fontspec{Helvetica Neue Condensed Bold}}
+  \setbeamerfont{title}     {family=\fontspec{Fira Sans Light},shape=\scshape}
+  \setbeamerfont{frametitle}{family=\fontspec{Fira Sans Light},shape=\scshape}
+  \setbeamertemplate{frametitle}[default][center]
 
 \else
   \ifluatex
