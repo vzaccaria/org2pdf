@@ -38,7 +38,7 @@ var main = function () {
                 ext = "tex";
             }
 
-            $s.execAsync("pandoc " + file + " --latex-engine=xelatex --template=" + __dirname + "/beamer-template.tex -t beamer -o " + path.basename(file, ".org") + "." + ext).then(function () {
+            $s.execAsync("cat " + file + " | sed -e 's/file://g' | pandoc -f org --latex-engine=xelatex --template=" + __dirname + "/beamer-template.tex -t beamer -o " + path.basename(file, ".org") + "." + ext).then(function () {
                 console.log("done.");
             });
         }
