@@ -16,8 +16,9 @@ var getOptions = function (doc) {
     var o = $d(doc);
     var help = $o("-h", "--help", false, o);
     var file = $o("-f", "--file", null, o);
+    var latex = $o("-t", "--latex", false, o);
     return {
-        help: help, file: file
+        help: help, file: file, latex: latex
     };
 };
 
@@ -27,11 +28,17 @@ var main = function () {
 
         var help = _getOptions.help;
         var file = _getOptions.file;
+        var latex = _getOptions.latex;
 
         if (help) {
             console.log(it);
         } else {
-            $s.execAsync("pandoc " + file + " --latex-engine=xelatex --template=" + __dirname + "/beamer-template.tex -t beamer -o " + path.basename(file, ".org") + ".pdf").then(function () {
+            var ext = "pdf";
+            if (latex) {
+                ext = "tex";
+            }
+
+            $s.execAsync("pandoc " + file + " --latex-engine=xelatex --template=" + __dirname + "/beamer-template.tex -t beamer -o " + path.basename(file, ".org") + "." + ext).then(function () {
                 console.log("done.");
             });
         }

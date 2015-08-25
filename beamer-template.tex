@@ -29,6 +29,9 @@ $endif$
 \setbeamercolor{subtitle}{fg=gray}
 \setbeamercolor{institute}{fg=gray}
 
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
 %% \setbeamercolor{itemize item}{fg=black}
 %% \setbeamercolor{normal text}{fg=black,bg=white}
 \setbeamercolor{item}{fg=black} % color of bullets
@@ -43,6 +46,21 @@ $endif$
 \setbeamertemplate{footline}{%
     \raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[20pt]{\color{gray}
           \tiny\insertframenumber}}}\hspace*{5pt}}
+
+\usepackage[export]{adjustbox}
+
+\usepackage{letltxmacro}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\makeatother
+\AtBeginDocument{
+  \LetLtxMacro\Oldincludegraphics\includegraphics
+  \renewcommand{\includegraphics}[2][]{%
+    \begin{center}
+    \Oldincludegraphics[max width=20cm, max height=8cm]{#2}
+    \end{center}
+    }
+}
 
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
