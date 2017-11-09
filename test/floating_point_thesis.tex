@@ -1,0 +1,95 @@
+% Created 2015-10-26 Mon 10:25
+\documentclass[bigger]{beamer}
+\author{Vittorio Zaccaria}
+\date{\textit{<2015-07-26 Sun>}}
+\title{synthesis of fixed point code}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs 24.5.1 (Org mode 8.2.10)}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{why we need fixed point}
+\label{sec-1}
+
+\begin{itemize}
+\item Express fractional numbers, using a fixed number of bits \url{http://www.digitalsignallabs.com/fp.pdf}
+
+\item Useful for systems without floating-point hardware (DSPs, FPGAs, and expensive custom ASIC, microcontrollers).
+
+\item Also useful when you need speed, as integer operations are faster than floating point ones.
+\end{itemize}
+
+\section{Integer representation}
+\label{sec-2}
+
+\begin{itemize}
+\item The formula for calculating the integer representation $x$ in a $Q_{m.n}$ format of a float number $f$ is (ah):
+
+$$x = round(f * 2^n)$$
+
+\item To convert it back the following formula is used:
+
+$$f = x * 2^{-n}$$
+\end{itemize}
+
+\section{Range and resolution}
+\label{sec-3}
+
+\begin{itemize}
+\item For a given $Q_{m.n}$ we have:
+
+\begin{itemize}
+\item its range is $$[ - (2^m) , 2^m -2^{-n}]$$
+
+\item its resolution is $$2^{-n}$$
+\end{itemize}
+\end{itemize}
+
+\section{The problem}
+\label{sec-4}
+
+\begin{itemize}
+\item operations can produce results that have more bits than the operands (\textbf{e.g.} multiplications)
+\end{itemize}
+
+$$Q_{1.7} * Q_{1.7} \rightarrow Q_{2.14}$$
+
+\begin{itemize}
+\item Solution: temporarily use a bigger register but then truncate or round back to $Q_{1.7}$
+\end{itemize}
+
+\section{Ada approach}
+\label{sec-5}
+
+\begin{itemize}
+\item Ada uses a delta type; with this you can specify what is the minimum difference between two float numbers to be
+considered different.
+\end{itemize}
+
+
+\begin{itemize}
+\item The compiler however will choose $2^{-12} = \frac{1}{4096}$, not $\frac{1}{3600}$.
+\end{itemize}
+
+\section{Concepts}
+\label{sec-6}
+
+Two's complement
+
+\begin{itemize}
+\item Assume $x$ is $N$ bits. We define the complement $x_2$ such that:
+\end{itemize}
+
+$x_2 + x = 2^N$
+
+\begin{itemize}
+\item $2^N$ is represented by zeroes over $N$ bits and a 1 outside the $N$ bits. So, if we focus on the lower $N$ bit,
+we'll see that $x_2$ behaves like a real \textbf{inverse} of $x$ in '+'.
+\end{itemize}
+% Emacs 24.5.1 (Org mode 8.2.10)
+\end{document}

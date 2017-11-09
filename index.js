@@ -17,8 +17,9 @@ var getOptions = function (doc) {
     var help = $o("-h", "--help", false, o);
     var file = $o("-f", "--file", null, o);
     var latex = $o("-t", "--latex", false, o);
+    var beamer = $o("-b", "--beamer", false, o);
     return {
-        help: help, file: file, latex: latex
+        help: help, file: file, latex: latex, beamer: beamer
     };
 };
 
@@ -29,6 +30,7 @@ var main = function () {
         var help = _getOptions.help;
         var file = _getOptions.file;
         var latex = _getOptions.latex;
+        var beamer = _getOptions.beamer;
 
         if (help) {
             console.log(it);
@@ -37,8 +39,14 @@ var main = function () {
             if (latex) {
                 ext = "tex";
             }
-
-            $s.execAsync("cat " + file + " | sed -e 's/file://g' | pandoc -f org --latex-engine=xelatex --template=" + __dirname + "/beamer-template.tex -t beamer -o " + path.basename(file, ".org") + "." + ext).then(function () {
+            var command = "";
+            if (!beamer) {
+                command = "emacsclient --eval '(progn (find-file \"" + path.resolve(file) + "\") (org-latex-export-to-pdf))'";
+            } else {
+                command = "emacsclient --eval '(progn (find-file \"" + path.resolve(file) + "\") (org-beamer-export-to-pdf))'";
+            }
+            console.log(command);
+            $s.execAsync(command).then(function () {
                 console.log("done.");
             });
         }

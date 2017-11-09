@@ -11,15 +11,16 @@ var getOptions = doc => {
     var help = $o('-h', '--help', false, o)
     var file = $o('-f', '--file', null, o)
     var latex = $o('-t', '--latex', false, o)
+    var beamer = $o('-b', '--beamer', false, o)
     return {
-        help, file, latex
+        help, file, latex, beamer
     }
 }
 
 var main = () => {
     $f.readLocal('docs/usage.md').then(it => {
         var {
-            help, file, latex
+            help, file, latex, beamer
         } = getOptions(it);
         if (help) {
             console.log(it)
@@ -28,10 +29,16 @@ var main = () => {
             if (latex) {
                 ext = 'tex';
             }
-			
-            $s.execAsync(`cat ${file} | sed -e 's/file://g' | pandoc -f org --latex-engine=xelatex --template=${__dirname}/beamer-template.tex -t beamer -o ${path.basename(file, '.org')}.${ext}`).then(() => {
+            let command = ""
+            if(!beamer) {
+                command = `emacsclient --eval '(progn (find-file \"${path.resolve(file)}\") (org-latex-export-to-pdf))'`
+            } else {
+                command = `emacsclient --eval '(progn (find-file \"${path.resolve(file)}\") (org-beamer-export-to-pdf))'`
+            }
+            console.log(command);
+            $s.execAsync(command).then(() => {
                 console.log("done.");
-            })
+            });
         }
     })
 }
